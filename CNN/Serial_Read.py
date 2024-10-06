@@ -13,7 +13,7 @@ DEF_FILE_NAME_SEPERATOR = '_'
 DEF_SAVE_TO_PATH = './TraningData'+DEF_FILE_NAME_SEPERATOR + DEF_TIME_MONTH + DEF_FILE_NAME_SEPERATOR + DEF_TIME_DAY+'/'
 DEF_FILE_FORMAT = '.txt'
 DEF_TITLE_STRING = 'IMU\n'
-DEF_BAUD_RATE = 921600
+DEF_BAUD_RATE = 3000000
 
 motion_name = ['RightAngle','SharpAngle','Lightning','Triangle','Letter_h','letter_R','letter_W','letter_phi','Circle','UpAndDown','Horn','Wave','NoMotion']
 port_list = list(serial.tools.list_ports.comports())
@@ -65,7 +65,7 @@ def Check_Title(Received_String):
     if(Title_Buffer == DEF_TITLE_STRING):
         return True
     else:
-        return False
+        return True
 
 #从数据标题之后裁剪出可用的数据
 #Cut off the tiltle from recerived data.
@@ -136,7 +136,9 @@ def main():
                 if Check_Title(received):
                     filename = DEF_SAVE_TO_PATH+motion_assigned+DEF_FILE_NAME_SEPERATOR+str(name_index)+DEF_FILE_FORMAT
                     with open(filename,"w") as file:
-                        file.write(IMU_String(received))
+                        raw_str = IMU_String(received)
+                        cleaned_str = raw_str.replace("\n", " ")
+                        file.write(cleaned_str)
                         file.close()
                     print("Saved as",filename)
                     recorded_count += 1

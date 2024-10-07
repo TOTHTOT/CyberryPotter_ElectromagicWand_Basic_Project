@@ -13,11 +13,12 @@ DEF_FILE_NAME_SEPERATOR = '_'
 DEF_SAVE_TO_PATH = './TraningData'+DEF_FILE_NAME_SEPERATOR + DEF_TIME_MONTH + DEF_FILE_NAME_SEPERATOR + DEF_TIME_DAY+'/'
 DEF_FILE_FORMAT = '.txt'
 DEF_TITLE_STRING = 'IMU\n'
-DEF_BAUD_RATE = 3000000
+DEF_BAUD_RATE = 921600
 
-motion_name = ['RightAngle','SharpAngle','Lightning','Triangle','Letter_h','letter_R','letter_W','letter_phi','Circle','UpAndDown','Horn','Wave','NoMotion']
+# motion_name = ['RightAngle','SharpAngle','Lightning','Triangle','Letter_h','letter_R','letter_W','letter_phi','Circle','UpAndDown','Horn','Wave','NoMotion']
+motion_name = ['Lightning', 'Circle', 'Letter_W', 'NoMotion']
 port_list = list(serial.tools.list_ports.comports())
-
+motion_name_len = len(motion_name)
 #显示所有可用串口
 #Show all the port avaliable on current device
 def show_all_com():
@@ -78,11 +79,11 @@ def Motion_Assign():
     i = 0
     user_input = 0
     print('\nChoose one from the fllowing name')
-    for i in range(0,13,1):
+    for i in range(0,motion_name_len,1):
         print(i+1,motion_name[i])
-    while user_input > 13 or user_input < 1:
-        user_input = int(input("Assign a motion you want to decord (1-13)"))
-        if user_input > 13 or user_input < 1:
+    while user_input > motion_name_len or user_input < 1:
+        user_input = int(input("Assign a motion you want to decord (1-" + str(motion_name_len) + ")"))
+        if user_input > motion_name_len or user_input < 1:
             print("Invalid Input.Check and try again")
         else:
                 return user_input - 1            
@@ -137,7 +138,7 @@ def main():
                     filename = DEF_SAVE_TO_PATH+motion_assigned+DEF_FILE_NAME_SEPERATOR+str(name_index)+DEF_FILE_FORMAT
                     with open(filename,"w") as file:
                         raw_str = IMU_String(received)
-                        cleaned_str = raw_str.replace("\n", " ")
+                        cleaned_str = raw_str.replace("\n", "")
                         file.write(cleaned_str)
                         file.close()
                     print("Saved as",filename)
